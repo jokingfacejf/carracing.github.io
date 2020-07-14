@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <title>Car Racing Game</title>
+   <script src="processing.js"></script>
+  </head>
+  <body>
+  <script type="text/processing">
+  void setup()
+  { 
+    size(1850, 950);
+    fill(255);
+    PFont fontA = loadFont("garamond");
+    textFont(fontA, 14);
+    noStroke();
+    
+  }
+
+    /*DECLARE*/
+    
+   //rock
+   var rockx1 = random(150, 1750); //rock 1 xPos
+   var rocky1 = random(610, 940); //rock 1 yPos
+   var rockr1 = random(20, 40); //rock 1 radius
+   
+   var rockx2 = random(150, 1750); //rock 2 xPos
+   var rocky2 = random(610, 940); //rock 2 yPos
+   var rockr2 = random(20, 40); //rock 2 radius
+
+   var rockx3 = random(150, 1750); //rock 3 xPos
+   var rocky3 = random(610, 940); //rock 3 yPos
+   var rockr3 = random(20, 40); //rock 3 radius
+
+   //car
+   var x1 = 0; //car 1 xPos
+   var y1 = 620; //car 1 yPos
+   var w1 = 50; //car 1 width
+   var h1 = 20; //car 1 height
+   var o1 = 10; //car 1 speed 
+  
+   var x2 = 0; //car 2 xPos
+   var y2 = 750; //car 2 yPos
+   var w2 = 40; //car 2 width
+   var h2 = 15; //car 2 height
+   var o2 = 10; //car 2 speed
+
+   var x3 = 0; //car 3 xPos
+   var y3 = 860; //car 3 yPos
+   var w3 = 45; //car 3 width
+   var h3 = 25; //car 3 height
+   var o3 = 10; //car 3 speed 
+
+  //function
+
+    //draw cloud
+    cloud = function(cx, cy){
+      /*
+      cx : xPos
+      cy : yPos
+      */
+      
+      fill(255);
+      ellipse(cx, cy, 50, 30);
+      ellipse(cx - 20, cy, 50*9/16, 30*2/3);
+      ellipse(cx + 20, cy, 50*9/16, 30*2/3);
+    }
+
+    //draw bush
+    bush = function(bx) {
+      /*
+      bx = xPos
+      */
+
+      fill(0, 153, 0);
+      arc(bx, 600, 35, 50,  PI, PI * 2);
+      arc(bx + 20, 600, 20, 30, PI, PI * 2);
+    }
+
+    //draw rock   
+    rock = function(rx, ry, rr) {
+      /*
+      rx : xPos
+      ry : yPos
+      rr : radius
+      */
+      fill(100);
+      ellipse(rx, ry, rr, rr);
+    }
+
+    //draw car
+    
+    drawCar = function(x, y, w, h, l, m, k) {
+      /* 
+      x : xPos
+      y : yPos
+      w : width
+      h : height
+      l, m, k : rgb id
+      */
+
+      //car 
+      fill(l, m, k);
+      rect(x, y, w, h);
+      rect(x + w/4, y - h/2, w/2, h/2);
+
+      //wheels
+      fill(k, l, m);
+      ellipse(x + 5/6 * w,  y + h, w/3, w/3); 
+      ellipse(x + 1/6 * w,  y + h, w/3, w/3);
+    }
+     
+
+
+
+
+
+
+  draw = function() {
+    background(125);
+
+    /*INTRODUCTION + RULE*/
+
+    //name
+    fill(255,255,255);
+    textSize(180);
+    text("CAR RACING",300,150); 
+
+    //rule
+    textSize(30);
+    text("How to play? ", 300, 200); 
+    text("1.If A Car Hit Obstacles, It Lost.", 300, 250);
+    text("2.If Two Cars Hit Another, Both Lost.", 300, 280);
+    text("3.A Car Which Pass Through Finish Line First Win The Race.", 300, 310);
+  
+    
+    //play button
+    textSize(40);
+    fill(0);
+    rect(690, 330, 430, 50); 
+    fill(255, 0, 0);
+    text("CLICK HERE TO PLAY", 700, 370); 
+
+
+
+
+    /*DRAW*/
+    
+    //draw land
+    fill(102, 68, 0);
+    rect(0, 600, width, 350); //land
+
+    //draw sky
+    fill(51, 214, 255); 
+    rect(0, 400, width, 200); //sky
+
+    //draw start + end line
+    fill(255);
+    rect(100, 600, 50, height); //start line
+    rect(1750, 600, 50, height); //end line
+
+    fill(255, 0, 0);
+    textSize(20);
+    text("Start", 105, 615); //start
+    text("End", 1755, 615); //end
+
+    //draw sun
+    fill(230, 184, 0);
+    ellipse(1750, 440, 70, 70); //sun
+
+    //draw cloud
+    cloud (800, 480); 
+    cloud (1500, 470);
+    cloud (100, 450); 
+    cloud (900, 500); 
+    cloud (300, 500); 
+    cloud (1400, 500);
+    cloud (1100, 480);
+    cloud (600, 520);
+
+    //draw bush 
+    bush(300);
+    bush(500);
+    bush(600);
+    bush(1000);
+    bush(1200);
+    bush(1500);
+    bush(1600);
+    bush(1750);
+    
+    //draw rock
+     
+    rock(rockx1, rocky1, rockr1);
+    rock(rockx2, rocky2, rockr2);
+    rock(rockx3, rocky3, rockr3);
+    
+    //draw car
+    drawCar(x1, y1, w1, h1, 100, 200, 100);//car 1
+    drawCar(x2, y2, w2, h2, 200, 100, 1); //car 2
+    drawCar(x3, y3, w3, h3, 200, 1, 10); //car 3 
+
+    //play button mechanism 
+    // x = 690 to 1120 y = 330 to 380
+
+    if(mouseX > 690 && mouseX < 1120 && mouseY > 330 && mouseY < 380 && mousePressed) {
+      //Move forward
+      x1 += random(0, o1);
+      x2 += random(0, o2);
+      x3 += random(0, o3);
+
+      
+      //Move up & down
+      if(y1 <= 610) {
+        y1 += o1;
+      }
+      else if(y1 >= 920) {
+        y1 += -o1;
+      }
+      else {
+        y1 += random(-o1, o1);
+      }
+
+      if(y2 <= 610) {
+        y2 += o2;
+      }
+      else if(y2 >= 920) {
+        y2 += -o2;
+      }
+      else {
+        y2 += random(-o2, o2);
+      }
+
+      if(y3 <= 610) {
+        y3 += o3;
+      }
+      else if( y3 >= 920) {
+        y3 += -o3;
+      }
+      else {
+        y3 += random(-o3, o3);
+      }
+
+          
+    } 
+    
+    //Finish line
+      
+    if(x1 + w1 >= 1800 || x2 + w2 >= 1800 || x3 + w3 >= 1800) {
+      noLoop();
+      fill(0);
+      rect(0, 400, width, 200);
+      fill(255);
+      textSize(80);
+      if(x1 + w1 >= 1800 && x2 + w2 < 1800 && x3 + w3 < 1800) {
+        text("CAR 1 IS THE WINNER!!", 520, 500);
+      }
+      else if(x2 + w2 >= 1800 && x1 + w1 < 1800 && x3 + w3 < 1800) {
+        text("CAR 2 IS THE WINNER!!", 520, 500);
+      }
+      else if(x3 + w3 >= 1800 && x1 + w1 < 1800 && x2 + w2 < 1800) {
+        text("CAR 3 IS THE WINNER!!", 520, 500);
+      }
+      else if(x1 + w1 >= 1800 && x2 + w2 >= 1800 && x3 + w3 < 1800) {
+        text("CAR 1 & CAR 2 ARE THE WINNER!!", 480, 500);
+      }
+      else if(x2 + w2 >= 1800 && x3 + w3 >= 1800 && x1 + w1 < 1800){
+        text("CAR 2 & CAR 3 ARE THE WINNER!!", 480, 500);
+      }
+      else if(x1 + w1 >= 1800 && x3 + w3 >= 1800 && x2 + w2 < 1800){
+        text("CAR 1 & CAR 3 ARE THE WINNER!!", 480, 500);
+      }
+      else if(x1 + w1 >= 1800 && x2 + w2 >= 1800 && x3 + w3 >= 1800){
+        text("ALL CARS ARE THE WINNER!!", 480, 500);
+      } 
+    }
+    else if(x1 + w1 < 1800 && x2 + w2 < 1800 && x3 + w3 < 1800 && o1 === 0 && o2 === 0 && o3 === 0) {
+      noLoop();
+      fill(0);
+      rect(0, 400, width, 200);
+      fill(255);
+      textSize(80);
+      text("NO CAR IS THE WINNER!!", 500, 500);
+    }
+      
+    //Crash
+    
+    /*car hit box = rect
+    4 corners:
+    +top left (x, y - h/2)
+    +top right (x + w, y - h/2)
+    +bottom left (x, y + h + w/3)
+    +bottom right (x + w, y + h + w/3)
+    */
+
+    /*CAR 1 & CAR 2*/
+
+    //Case 1:  size car 1 < size car 2 
+
+    if(x1 > x2 && x1 < x2 + w2) {
+      if(y1 - h1 /2 > y2 - h2 /2 && y1 - h1 /2 < y2 + h2 + w2 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x1 > x2 && x1 < x2 + w2) {
+      if(y1 + h1 + w1 /3 > y2 - h2 /2 && y1 + h1 + w1 /3 < y2 + h2 + w2 / 3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x1 + w1 > x2 && x1 + w1 < x2 + w2) {
+      if( y1 - h1 /2 > y2 - h2 /2 && y1 - h1 /2 < y2 + h2 + w2 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x1 + w1 > x2 && x1 + w1 < x2 + w2) {
+      if(y1 + h1 + w1 /3 > y2 - h2 /2 && y1 + h1 + w1 /3 < y2 + h2 + w2 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+    
+    //Case 2: size car 1 > size car 2
+
+    if(x2 > x1 && x2 < x1 + w1) {
+      if(y2 - h2 /2 > y1 - h1 /2 && y2 - h2 /2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x2 > x1 && x2 < x1 + w1) {
+      if(y2 + h2 + w2 /3 > y1 - h1 /2 && y2 + h2 + w2 /3 < y1 + h1 + w1 / 3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x2 + w2 > x1 && x2 + w2 < x1 + w1) {
+      if( y2 - h2 /2 > y1 - h1 /2 && y2 - h2 /2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    if(x2 + w2 > x1 && x2 + w2 < x1 + w1) {
+      if(y2 + h2 + w2 /3 > y1 - h1 /2 && y2 + h2 + w2 /3 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+      }
+    }
+
+    //Case 3: size car 1 = size car 2
+
+    if(x1 === x2 && x1 + w1 === x2 + w2 && y1 - h1 /2 === y2 - h2 /2 && y1 + h1 + w1 /3 === y2 + h2 + w2 /3) {
+        o1 = 0;
+        o2 = 0;
+        y1 = 5000;
+        y2 = 5000;
+    }
+
+
+    /*CAR 2 & CAR 3*/
+  
+    //Case 1: size car 2 < size car 3
+
+    if(x2 > x3 && x2 < x3 + w3) {
+      if(y2 - h2 /2 > y3 - h3 /3 && y2 - h2 /2 < y3 + h3 + w3 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      } 
+    }
+
+    if(x2 > x3 && x2 < x3 + w3) {
+      if(y2 + h2 + w2 /3 > y3 - h3 /2 && y2 + h2 + w2 /3 < y3 + h3 + w3 / 3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x2 + w2 > x3 && x2 + w2 < x3 + w3) {
+      if(y2 - h2 /2 > y3 - h3 /2 && y2 - h2 /2 < y3 + h3 + w3 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x2 + w2 > x3 && x2 + w2 < x3 + w3) {
+      if(y2 + h2 + w2 /3 > y3 - h3 /2 && y2 + h2 + w2 /3 < y3 + h3 + w3 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+    
+    //Case 2: size car 2 > size car 3
+
+    if(x3 > x2 && x3 < x2 + w2) {
+      if(y3 - h3 /2 > y2 - h2 /2 && y3 - h3 /2 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 > x2 && x3 < x2 + w2) {
+      if(y3 + h3 + w3 /3 > y2 - h2 /2 && y3 + h3 + w3 /3 < y2 + h2 + w2 / 3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 + w3 > x2 && x3 + w3 < x2 + w2) {
+      if( y3 - h3 /2 > y2 - h2 /2 && y3 - h3 /2 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 + w3 > x2 && x3 + w3 < x2 + w2) {
+      if(y3 + h3 + w3 /3 > y2 - h2 /2 && y3 + h3 + w3 /3 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    //Case 3: size car 2 = size car 3
+
+    if(x2 === x3 && x2 + w2 === x3 + w3 && y2 - h2 /2 === y3 - h3 /2 && y2 + h2 + w2 /3 === y3 + h3 + w3 /3) {
+        o2 = 0;
+        o3 = 0;
+        y2 = 5000;
+        y3 = 5000;
+    }
+
+    /*CAR 1 & CAR 3*/
+
+    //Case 1: size car 1 < size car 3
+
+    if(x1 > x3 && x1 < x3 + w3) {
+      if(y1 - h1 /2 > y3 - h3 /2 && y1 - h1 /2 < y3 + h3 + w3 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x1 > x3 && x1 < x3 + w3) {
+      if(y1 + h1 + w1 /3 > y3 - h3 /2 && y1 + h1 + w1 /3 < y3 + h3 + w3 / 3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x1 + w1 > x3 && x1 + w1 < x3 + w3) {
+      if( y1 - h1 /2 > y3 - h3 /2 && y1 - h1 /2 < y3 + h3 + w3 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x1 + w1 > x3 && x1 + w1 < x3 + w3) {
+      if(y1 + h1 + w1 /3 > y3 - h3 /2 && y1 + h1 + w1 /3 < y3 + h3 + w3 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+    
+    //Case 2: size car 1 > size car 3
+
+    if(x3 > x1 && x3 < x1 + w1) {
+      if(y3 - h3 /2 > y1 - h1 /2 && y3 - h3 /2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 > x1 && x3 < x1 + w1) {
+      if(y3 + h3 + w3 /3 > y1 - h1 /2 && y3 + h3 + w3 /3 < y1 + h1 + w1 / 3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 + w3 > x1 && x3 + w3 < x1 + w1) {
+      if( y3 - h3 /2 > y1 - h1 /2 && y3 - h3 /2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    if(x3 + w3 > x1 && x3 + w3 < x1 + w1) {
+      if(y3 + h3 + w3 /3 > y1 - h1 /2 && y3 + h3 + w3 /3 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+      }
+    }
+
+    //Case 3: size car 1 = size car 3
+
+    if(x1 === x3 && x1 + w1 === x3 + w3 && y1 - h1 /2 === y3 - h3 /2 && y1 + h1 + w1 /3 === y3 + h3 + w3 /3) {
+        o1 = 0;
+        o3 = 0;
+        y1 = 5000;
+        y3 = 5000;
+    }
+
+
+    //rock crash
+    /*Note:
+    rock hit box = rect
+    4 corners:
+    +top left (x - r, y - r)
+    +top right (x + r, y -r)
+    +bottom left (x - r, y + r)
+    +bottom right (x + r, y + r)
+    */
+    /*Note 2:
+    car hit box = rect
+    4 corners:
+    +top left (x, y - h/2)
+    +top right (x + w, y - h/2)
+    +bottom left (x, y + h + w/3)
+    +bottom right (x + w, y + h + w/3)
+    */
+
+    /*ROCK1*/
+    
+    //car 1
+    if(rockx1 - rockr1 > x1 && rockx1 - rockr1 < x1 + w1) {
+      if(rocky1 - rockr1 > y1 - h1 /2 && rocky1 - rockr1 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 - rockr1 > x1 && rockx1 - rockr1 < x1 + w1) {
+      if(rocky1 + rockr1 > y1 - h1 /2 && rocky1 + rockr1 < y1 + h1 + w1 / 3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x1 && rockx1 + rockr1 < x1 + w1) {
+      if(rocky1 - rockr1 > y1 - h1 /2 && rocky1 - rockr1 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x1 && rockx1 + rockr1 < x1 + w1) {
+      if(rocky1 + rockr1 > y1 - h1 /2 && rocky1 + rockr1 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky1 = 5000;
+      }
+    }
+    
+    //car 2
+    if(rockx1 - rockr1 > x2 && rockx1 - rockr1 < x2 + w2) {
+      if(rocky1 - rockr1 > y2 - h2 /2 && rocky1 - rockr1 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 - rockr1 > x2 && rockx1 - rockr1 < x2 + w2) {
+      if(rocky1 + rockr1 > y2 - h2 /2 && rocky1 + rockr1 < y2 + h2 + w2 / 3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x2 && rockx1 + rockr1 < x2 + w2) {
+      if(rocky1 - rockr1 > y2 - h2 /2 && rocky1 - rockr1 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x2 && rockx1 + rockr1 < x2 + w2) {
+      if(rocky1 + rockr1 > y2 - h2 /2 && rocky1 + rockr1 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky1 = 5000;
+      }
+    }
+  
+    //car 3
+    if(rockx1 - rockr1 > x3 && rockx1 - rockr1 < x3 + w3) {
+      if(rocky1 - rockr1 > y3 - h3 /2 && rocky1 - rockr1 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 - rockr1 > x3 && rockx1 - rockr1 < x3 + w3) {
+      if(rocky1 + rockr1 > y3 - h3 /2 && rocky1 + rockr1 < y3 + h3 + w3 / 3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x3 && rockx1 + rockr1 < x3 + w3) {
+      if(rocky1 - rockr1 > y3 - h3 /2 && rocky1 - rockr1 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    if(rockx1 + rockr1 > x3 && rockx1 + rockr1 < x3 + w3) {
+      if(rocky1 + rockr1 > y3 - h3 /2 && rocky1 + rockr1 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky1 = 5000;
+      }
+    }
+
+    /*ROCK2*/
+    
+    //car 1
+    if(rockx2 - rockr2 > x1 && rockx2 - rockr2 < x1 + w1) {
+      if(rocky2 - rockr2 > y1 - h1 /2 && rocky2 - rockr2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 - rockr2 > x1 && rockx2 - rockr2 < x1 + w1) {
+      if(rocky2 + rockr2 > y1 - h1 /2 && rocky2 + rockr2 < y1 + h1 + w1 / 3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x1 && rockx2 + rockr2 < x1 + w1) {
+      if(rocky2 - rockr2 > y1 - h1 /2 && rocky2 - rockr2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x1 && rockx2 + rockr2 < x1 + w1) {
+      if(rocky2 + rockr2 > y1 - h1 /2 && rocky2 + rockr2 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky2 = 5000;
+      }
+    }
+    
+    //car 2
+    if(rockx2 - rockr2 > x2 && rockx2 - rockr2 < x2 + w2) {
+      if(rocky2 - rockr2 > y2 - h2 /2 && rocky2 - rockr2 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 - rockr2 > x2 && rockx2 - rockr2 < x2 + w2) {
+      if(rocky2 + rockr2 > y2 - h2 /2 && rocky2 + rockr2 < y2 + h2 + w2 / 3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x2 && rockx2 + rockr2 < x2 + w2) {
+      if(rocky2 - rockr2 > y2 - h2 /2 && rocky2 - rockr2 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x2 && rockx2 + rockr2 < x2 + w2) {
+      if(rocky1 + rockr1 > y2 - h2 /2 && rocky1 + rockr1 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky2 = 5000;
+      }
+    }
+  
+    //car 3
+    if(rockx2 - rockr2 > x3 && rockx2 - rockr2 < x3 + w3) {
+      if(rocky2 - rockr2 > y3 - h3 /2 && rocky2 - rockr2 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 - rockr2 > x3 && rockx2 - rockr2 < x3 + w3) {
+      if(rocky2 + rockr2 > y3 - h3 /2 && rocky2 + rockr2 < y3 + h3 + w3 / 3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x3 && rockx2 + rockr2 < x3 + w3) {
+      if(rocky2 - rockr2 > y3 - h3 /2 && rocky2 - rockr2 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    if(rockx2 + rockr2 > x3 && rockx2 + rockr2 < x3 + w3) {
+      if(rocky2 + rockr2 > y3 - h3 /2 && rocky2 + rockr2 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky2 = 5000;
+      }
+    }
+
+    /*ROCK3*/
+    
+    //car 1
+    if(rockx3 - rockr3 > x1 && rockx3 - rockr3 < x1 + w1 ) {
+      if(rocky3 - rockr3 > y1 - h1 /2 && rocky3 - rockr3 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 - rockr3 > x1 && rockx3 - rockr3 < x1 + w1) {
+      if(rocky3 + rockr3 > y1 - h1 /2 && rocky3 + rockr3 < y1 + h1 + w1 / 3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x1 && rockx3 + rockr3 < x1 + w1) {
+      if(rocky3 - rockr3 > y1 - h1 /2 && rocky3 - rockr3 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x1 && rockx3 + rockr3 < x1 + w1) {
+      if(rocky3 + rockr3 > y1 - h1 /2 && rocky3 + rockr3 < y1 + h1 + w1 /3) {
+        o1 = 0;
+        y1 = 5000;
+        rocky3 = 5000;
+      }
+    }
+    
+    //car 2
+    if(rockx3 - rockr3 > x2 && rockx3 - rockr3 < x2 + w2 ) {
+      if(rocky3 - rockr3 > y2 - h2 /2 && rocky3 - rockr3 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 - rockr3 > x2 && rockx3 - rockr3 < x2 + w2) {
+      if(rocky3 + rockr3 > y2 - h2 /2 && rocky3 + rockr3 < y2 + h2 + w2 / 3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x2 && rockx3 + rockr3 < x2 + w2) {
+      if(rocky3 - rockr3 > y2 - h2 /2 && rocky3 - rockr3 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x2 && rockx3 + rockr3 < x2 + w2) {
+      if(rocky3 + rockr3 > y2 - h2 /2 && rocky3 + rockr3 < y2 + h2 + w2 /3) {
+        o2 = 0;
+        y2 = 5000;
+        rocky3 = 5000;
+      }
+    }
+  
+    //car 3
+    if(rockx3 - rockr3 > x3 && rockx3 - rockr3 < x3 + w3 ) {
+      if(rocky3 - rockr3 > y3 - h3 /2 && rocky3 - rockr3 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 - rockr3 > x3 && rockx3 - rockr3 < x3 + w3) {
+      if(rocky3 + rockr3 > y3 - h3 /2 && rocky3 + rockr3 < y3 + h3 + w3 / 3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x3 && rockx3 + rockr3 < x3 + w3) {
+      if(rocky3 - rockr3 > y3 - h3 /2 && rocky3 - rockr3 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+    if(rockx3 + rockr3 > x3 && rockx3 + rockr3 < x3 + w3) {
+      if(rocky3 + rockr3 > y3 - h3 /2 && rocky3 + rockr3 < y3 + h3 + w3 /3) {
+        o3 = 0;
+        y3 = 5000;
+        rocky3 = 5000;
+      }
+    }
+
+
+  }  
+  </script>
+  <canvas ></canvas>  
+</body>
+</html>
